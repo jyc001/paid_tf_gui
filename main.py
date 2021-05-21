@@ -2,6 +2,10 @@ import Ui_main
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 import sys, qt_material, predict
+import os
+import tensorflow as tf
+
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
 class Ui(Ui_main.Ui_Dialog, QtWidgets.QWidget):
@@ -45,8 +49,9 @@ class Ui(Ui_main.Ui_Dialog, QtWidgets.QWidget):
             self.opt_b.setText(gg_dir)
 
     def chs_pic_clk(self):
+        self.textEdit.clear()
         gg_dir = QFileDialog.getOpenFileNames(self, "选择待检测图片", filter="JPG Img(*.jpg)")
-        if gg_dir is not None:
+        if gg_dir != "":
             self.picfs = gg_dir[0]
             show_text = ""
             for i in self.picfs:
@@ -65,8 +70,11 @@ class Ui(Ui_main.Ui_Dialog, QtWidgets.QWidget):
         self.progressBar.setMaximum(len(self.picfs))
         for i in self.picfs:
             predict.predict(i)
-            self.step +=1
+            self.step += 1
             self.progressBar.setValue(self.step)
+        self.progressBar.setValue(0)
+        self.textEdit.setMarkdown("# 完成")
+
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
