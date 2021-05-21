@@ -1,0 +1,3 @@
+0;defect-A
+1;defect-B
+2;ok
